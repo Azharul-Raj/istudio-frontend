@@ -1,19 +1,16 @@
 import useAddUserModal from "../../hooks/useAddUserModal";
-import {useForm,FieldValues,SubmitHandler, set} from 'react-hook-form'
+import {useForm,FieldValues,SubmitHandler} from 'react-hook-form'
 import Input from "../Input";
 import Modal from "./Modal"
 import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import useStore from "../../hooks/useStore";
 import { ModalProps } from "../../types/data";
 
 
 const AddUserModal:React.FC<ModalProps> =({refresh,setRefresh})=>{
     const userModal=useAddUserModal();
     const [isLoading,setIsLoading]=useState(false);
-    // const setRefresh=useStore((state)=>state.setRefresh)
-    // const refresh=useStore((state)=>state.refresh)
     
 
     const {register,handleSubmit,formState:{errors},reset}=useForm<FieldValues>({
@@ -82,7 +79,6 @@ const AddUserModal:React.FC<ModalProps> =({refresh,setRefresh})=>{
             }
         })
         .catch(err=>console.log(err))
-        console.log(data)
     }
     return(
         <Modal

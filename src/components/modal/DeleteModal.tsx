@@ -17,7 +17,6 @@ const DeleteModal:React.FC<ModalProps> =({refresh,setRefresh})=>{
     const {register,formState:{errors},handleSubmit,reset}=useForm<FieldValues>()
 
     const handleDelete=(data:any)=>{
-        console.log(id)
         if(data.delete==="DELETE"){
             setIsLoading(true)
             axios.delete(`/users/${id}`)
@@ -25,15 +24,22 @@ const DeleteModal:React.FC<ModalProps> =({refresh,setRefresh})=>{
                 if(res.data?.message==='success'){
                     setId("")
                     toast.success("Successfully deleted");
-                    reset();
+                    reset();                    
                     setIsLoading(false)
                     setRefresh(!refresh)
-                    deleteModal.onClose()
+                    deleteModal.onClose();
+                    return;
                 }
             })
-            .catch(err=>toast.error("Something went wrong"))
+            .catch(err=>{
+                toast.error("Something went wrong");
+                console.log(err)
+            })
         }
-        return toast.error("Type DELETE to delete this")
+        if(data?.delete!=='DELETE'){
+            return toast.error("Type DELETE to delete this")
+        }        
+        return
     }
     const bodyContext=(
         <Input

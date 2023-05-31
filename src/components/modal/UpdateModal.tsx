@@ -4,11 +4,16 @@ import useUpdateModal from "../../hooks/useUpdateModal";
 import Modal from "./Modal"
 import Input from '../Input';
 import { toast } from 'react-hot-toast';
+import axios from 'axios';
+import useStore from '../../hooks/useStore';
+import { ModalProps } from '../../types/data';
 
-const UpdateModal=()=>{
+const UpdateModal:React.FC<ModalProps> =({refresh,setRefresh})=>{
     const [isLoading,setIsLoading]=useState(false)
     const updateModal=useUpdateModal();
-    const {register,formState:{errors},handleSubmit}=useForm<FieldValues>();
+    const id=useStore((state)=>state.modificationId);
+    const setId=useStore((state)=>state.setModificationId);
+    const {register,formState:{errors},handleSubmit,reset}=useForm<FieldValues>();
 
     const bodyContext=(
         <>
@@ -50,19 +55,43 @@ const UpdateModal=()=>{
     // handleUpdate function
     const handleUpdate:SubmitHandler<FieldValues> =(data)=>{
         const {name,email,phoneNumber,hobbies}=data;
-        let newHobbies;
-        if(hobbies){
-          newHobbies=  hobbies.split(',')
-        }
-        let updatesData;
+        let updatedData={};
+       
         if(!name && !email && !phoneNumber && !hobbies){
             return toast.error("Please fill at least a field to update the user")
         }
-        return toast.success('Ok')
+        if(name){
+            updatedData={...updatedData,name}
+        }
+        if(email){
+            updatedData={...updatedData,email}
+        }
+        if(phoneNumber){
+            updatedData={...updatedData,phoneNumber}
+        }
+        if(hobbies){
+            updatedData={...updatedData,hobbies:hobbies.split(",")}
+        }
+        setIsLoading(true)
+        axios.put(`/users/${id}`,updatedData)
+        .then(res=>{
+            if(res.data?.message==='success'){
+                toast.success("Update success")
+                setRefresh(!refresh)
+                setIsLoading(false);
+                reset()
+                setId("")
+                updateModal.onClose()
+            }
+        })
+        .catch(err=>{
+            toast.error("Something went wrong");
+            console.log(err)
+        })
     }
     return(
         <Modal
-         title="Leave empty the file you don't want to update"
+         title="Fill any field that you want to update"
          isOpen={updateModal.isOpen}
          onClose={updateModal.onClose}
          disabled={isLoading}

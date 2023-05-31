@@ -59,15 +59,15 @@ const TableRow:React.FC<TableRowProps> =({data,id})=>{
                     {phoneNumber}
                 </td>
                 <td className="px-6 py-4">
-                    {hobbies.map((hobby,i)=><span key={i}>{hobby},</span>)}
+                    {hobbies?.map((hobby,i)=><span key={i}>{hobby},</span>)}
                 </td>                
                 <td className="flex items-center justify-center px-6 py-4 space-x-3">
                    { rowId===_id?
-                   <button onClick={()=>handleData(data)} className='p-2 bg-red-600 text-white rounded-lg'>Send Email</button>
+                   <button onClick={()=>handleData(data)} className='p-2 bg-red-600 text-white rounded-lg'>Send</button>
                    :
                    <>
-                   <button onClick={()=>handleUpdateButton(_id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
-                    <button onClick={()=>handleDeleteButton(_id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</button>
+                   <button onClick={()=>handleUpdateButton(_id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Update</button>
+                    <button onClick={()=>handleDeleteButton(_id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
                     </>}
                 </td>
             </tr>
