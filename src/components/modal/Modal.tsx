@@ -1,0 +1,75 @@
+import React, { useEffect, useState } from "react";
+import {IoMdClose} from 'react-icons/io'
+import Button from "../Button";
+
+interface ModalProps{
+    title:string;
+    actionLabel:string;
+    isOpen:boolean;
+    onClose:()=>void;
+    onSubmit:()=>void;
+    disabled:boolean;
+    body:React.ReactElement;
+}
+
+const Modal:React.FC<ModalProps> =({title,actionLabel,disabled,isOpen,onSubmit,onClose,body})=>{
+    const [showModal,setShowModal]=useState(isOpen);
+    // 
+    useEffect(()=>{
+        setShowModal(isOpen)
+    },[isOpen])
+
+    const handleClose=()=>{
+        setShowModal(false);
+        setTimeout(()=>{
+            onClose()
+        },300)
+    }
+    // handle submit function
+    const handleSubmit=()=>{
+        onSubmit()
+    }
+    return(
+        <div className={`flex justify-center items-center fixed overflow-x-hidden overflow-y-auto inset-0 outline-none  ${showModal?"z-50 bg-neutral-700/70":"-z-50 bg-transparent"} `}>
+            <div className="relative w-full h-full mx-auto my-6 md:w-4/6 lg:w-3/6 xl:w-2/5 md:h-auto">
+          {/* Content  */}
+          <div className={`
+          transition duration-300 h-full ${showModal ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}        
+        `}>
+            <div className="flex flex-col shadow-lg rounded-lg relative h-full translate w-full bg-white md:h-auto border-0 outline-none focus:outline-none">
+              {/* Header */}
+              <div className="flex items-center justify-center relative border-b-[1px] rounded-t p-2">
+                {/* close button */}
+                <button
+                  onClick={handleClose}
+                  className='p-1 border-0 transition absolute left-9 hover:opacity-70'
+                >
+                  <IoMdClose size={25} />
+                </button>
+                <h4 className="text-lg font-semibold">
+                  {
+                    title
+                  }
+                </h4>
+              </div>
+              {/* Body */}
+              <div className="relative px-6 py-3 flex-auto">
+                {
+                  body
+                }
+              </div>
+              {/* Footer */}
+              <div className="flex flex-col gap-2 p-6">
+                <div className="flex items-center gap-4 w-full">
+                 
+                  <Button label={actionLabel} disabled={disabled} onClick={handleSubmit} />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        </div>
+    )
+}
+export default Modal;
